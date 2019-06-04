@@ -13,13 +13,13 @@ const connection = mysql.createConnection({
   database: "Tasks"
 });
 
-app.get("/tasks", function(request, response) {
+app.get("/tasks", function (request, response) {
   const username = request.query.username;
   let queryToExecute = "SELECT * FROM Tasks";
   //if (username) {
-    //query =
-      //"SELECT * FROM Task JOIN User on Task.UserId = User.UserId WHERE User.Username = " +
-      //connection.escape(username);
+  //query =
+  //"SELECT * FROM Task JOIN User on Task.UserId = User.UserId WHERE User.Username = " +
+  //connection.escape(username);
   //}
   connection.query(queryToExecute, (err, queryResults) => {
     if (err) {
@@ -34,10 +34,24 @@ app.get("/tasks", function(request, response) {
     }
   });
 });
-app.post("/tasks", function(request, response) {
+app.post("/tasks", function (request, response) {
 
-const taskToBeSaved = request.body;
+  const taskToBeSaved = request.body;
 
-}); 
+  connection.query('INSERT INTO Tasks SET ?', taskToBeSaved, function (error, results, fields) {
+    if (error) {
+      console.log("Error saving new task", error);
+      response.status(500).json({
+        error: error
+      });
+    }
+    else {
+      response.json({
+        taskId: results.insertId
+      });
+    }
+
+  });
+});
 
 module.exports.handler = serverless(app);
