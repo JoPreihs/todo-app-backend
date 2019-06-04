@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 app.use(cors());
+app.use(express.json());
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -33,5 +34,10 @@ app.get("/tasks", function(request, response) {
     }
   });
 });
+app.post("/tasks", function(request, response) {
+
+const taskToBeSaved = request.body;
+
+}); 
 
 module.exports.handler = serverless(app);
